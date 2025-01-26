@@ -1,6 +1,6 @@
 import React from 'react';
 
-function RegistroPacientes() {
+const PacientesPage = () => {
     return (
         <div>
             <h2>Registro Pacientes</h2>
@@ -9,4 +9,4 @@ function RegistroPacientes() {
     );
 }
 
-export default RegistroPacientes;
+export default PacientesPage;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function EquipoMedico() {
+const MedicosPage = () => {
     return (
         <div>
             <h2>Equipo Medico</h2>
@@ -9,4 +9,6 @@ function EquipoMedico() {
     );
 }
 
-export default EquipoMedico;
+export default MedicosPage;
+
+

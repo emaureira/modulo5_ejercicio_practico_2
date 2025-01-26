@@ -1,34 +1,37 @@
-import './App.css'
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './assets/components/navbar';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './auth/AuthContext';
+import Layout from './components/Layout';
+import HomePage from './pages/HomePage';
+import Dashboard from './pages/Dashboard';
+import LoginPage from './pages/LoginPage';
+import MedicosPage from './pages/MedicosPage';
+import PacientesPage from './pages/PacientesPage';
 
-// importamos las vistas
-import Home from './assets/vistas/home';
-import Login from './assets/vistas/login';
-import Logout from './assets/vistas/logout';
-import Nosotros from './assets/vistas/nosotros';
-import EquipoMedico from './assets/vistas/equipoMedico';
-import RegistroPacientes from './assets/vistas/registroPacientes';
 
-function App() {
+
+// Componente para proteger rutas
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+const App = () => {
   return (
-    <Router>
-      <Navbar />
-      <div className="container ps-5">
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/nosotros" element={<Nosotros />} />
-          <Route path="/equipo-medico" element={<EquipoMedico />} />
-          <Route path="/registro-pacientes" element={<RegistroPacientes />} />
+         <Route path="/" element={<Layout />} >
+           <Route index element={<HomePage />} />
+           <Route path="/login" element={<LoginPage />} />
+           <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
+            <Route path="/medicos" element={<ProtectedRoute><MedicosPage /></ProtectedRoute>} />
+            <Route path="/pacientes" element={<ProtectedRoute><PacientesPage/></ProtectedRoute>} />
+            </Route>
         </Routes>
-      </div>
-    </Router>
+      </BrowserRouter>
+    </AuthProvider>
   );
-}
+};
 
 export default App;
-
-// https://github.com/emaureira/modulo5_ejercicio_2.git
