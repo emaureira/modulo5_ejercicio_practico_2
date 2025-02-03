@@ -3,8 +3,8 @@ import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 
 const Layout = () => {
-  const { user, logout, isAuthenticated } = useAuth();
-
+  const { auth, user, logout, isAuthenticated } = useAuth();
+  console.log("Valor de isAuthenticated:", auth);
   return (
     <div>
         <header >
@@ -16,7 +16,7 @@ const Layout = () => {
                             <Link className='nav-link' to="/">Home</Link>
                         </li>
                         {
-                            isAuthenticated ? (
+                            auth.isAuthenticated ? (
                                 <>
                                     <li className='nav-item'>
                                         <Link className='nav-link' to="/dashboard">Dashboard</Link></li>

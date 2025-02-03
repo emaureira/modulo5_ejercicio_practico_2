@@ -1,41 +1,49 @@
 // auth/AuthContext.js
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Guarda información del usuario autenticado (null si no lo está)
-  const [role, setRole] = useState(null); // Almacenar el rol del usuario
 
-  const login = (userData, userRole) => { // Aceptar role al loguear
-    setUser(userData);
-    setRole(userRole);
+  const [auth, setAuth] = useState({ isAuthenticated: false, token: null });
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwToken');
+    if(token){
+      setAuth({isAuthenticated: true, token: token});
+    }
+
+  }, []);
+
+
+useEffect(() =>{
+  if(auth.token){
+    localStorage.setItem('jwtToken', auth.token);
+  }
+},[auth]);
+
+
+
+  const login = (token) => { 
+    setAuth({ isAuthenticated: true, token});
   };
 
   const logout = () => {
-    setUser(null);
-    setRole(null); // Resetear el rol al cerrar sesión
+    localStorage.removeItem('jwtToken');
+        setAuth({ isAuthenticated: false, token: null });
   };
 
-  // Método para verificar si el usuario tiene un rol especifico
-  const hasRole = (requiredRole) => {
-     return role === requiredRole; 
-  };
 
-  const value = {
-    user,
-    role,
-    login,
-    logout,
-    isAuthenticated: !!user,
-    hasRole
-  };
+ 
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{auth, login, logout}}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+}
